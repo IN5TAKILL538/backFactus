@@ -20,7 +20,7 @@ app.use(express.static("public"));
 app.use(cors());
 
 
-mongoose.connect(process.env.MONGODB_CCL)
+mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('Base de datos conectada'))
     .catch((error) => console.log('Error en la conexión a la base de datos:', error));
 
@@ -32,6 +32,6 @@ mongoose.connect(process.env.MONGODB_CCL)
 
 const PORT = process.env.PORT || 3200;
 app.listen(PORT, () => {
-    console.log(`servidor corriendo en el puerto HTTP://LICALHOST:${PORT}`);
+    console.log(`servidor corriendo en el puerto HTTP://LOCALHOST:${PORT}`);
 });
 

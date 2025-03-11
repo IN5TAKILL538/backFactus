@@ -1,18 +1,30 @@
 // models/Factura.js
 import mongoose from 'mongoose';
 
-const facturaSchema = new mongoose.Schema({
-    number: { type: String, required: true },
-    api_client_name: { type: String },
-    reference_code: { type: String },
-    identification: { type: String },
-    graphic_representation_name: { type: String },
-    email: { type: String, required: true },
-    total: { type: Number, required: true },
-    status: { type: Number, default: 1 },
-    payment_form: { type: String },
-    created_at: { type: Date, default: Date.now },
-    usuarioId: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario' }
+const InvoiceSchema = new mongoose.Schema({
+    numberingRangeId: { type: Number, },
+    referenceCode: { type: String, required: true },
+    observation: { type: String, default: '' },
+    paymentForm: { type: String, required: true },
+    paymentDueDate: { type: Date, required: true },
+    paymentMethodCode: { type: String, required: true },
+    billingPeriod: {
+        startDate: { type: Date, required: true },
+        startTime: { type: String, required: true },
+        endDate: { type: Date, required: true },
+        endTime: { type: String, required: true }
+    },
+    customer: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    items: [{
+        product: { type: mongoose.Schema.Types.ObjectId, ref: 'servicio', required: true },
+        
+        quantity: { type: Number, required: true },
+        discountRate: { type: Number, default: 0 },
+        withholdingTaxes: [{
+            code: { type: String, required: true },
+            withholdingTaxRate: { type: Number, required: true }
+        }]
+    }]
 }, { timestamps: true });
 
-export default mongoose.model('Factura', facturaSchema);
+export default mongoose.model('facturas', InvoiceSchema);

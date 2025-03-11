@@ -1,8 +1,14 @@
 import mongoose from 'mongoose';
 
-const productoSchema = new mongoose.Schema({
-    nombre: { type: String, required: true },
-    precio: { type: Number, required: true },
-    stock: { type: Number, required: true }
+const ProductSchema = new mongoose.Schema({
+    codeReference: { type: String,   required: true },
+    name: { type: String, required: true },
+    price: { type: Number, required: true },
+    taxRate: { type: Number, required: true },
+    unitMeasureId: { type: Number, required: true },
+    standardCodeId: { type: Number, required: true },
+    isExcluded: { type: Boolean, required: true, default: false },
+    tributeId: { type: Number, required: true }
 }, { timestamps: true });
-export default mongoose.model('Producto', productoSchema);
+
+export default mongoose.model('servicio', ProductSchema);

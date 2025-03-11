@@ -1,37 +1,100 @@
-const Producto = require('../models/productos.js');
-
-const getProducts = async (req, res) => {
-    const products = await Producto.find();
-    res.json(products);
-};
-
-const getProductById = async (req, res) => {
-    const product = await Producto.findById(req.params.id);
-    res.json(product);
-};
-
+import productos from '../models/productos.js';
+/**
+ * POST /products
+ * Crea un nuevo producto en la base de datos.
+ */
 const createProduct = async (req, res) => {
-    const product = new Producto(req.body);
-    await product.save();
-    res.json(product);
+    try {
+        const { codeReference } = req.body;
+        
+        // Verificar si el producto ya existe
+        const existingProduct = await productos.findOne({ codeReference });
+        if (existingProduct) {
+            return res.status(400).json({ message: 'El producto ya existe con este código de referencia' });
+        }
+        
+        const newProduct = new productos(req.body);
+        const savedProduct = await newProduct.save();
+        res.status(201).json(savedProduct);
+    } catch (error) {
+        res.status(500).json({ message: 'Error al crear el producto', error: error.message });
+    }
 };
 
+/**
+ * GET /products
+ * Obtiene todos los productos de la base de datos.
+ */
+const getAllProducts = async (req, res) => {
+    try {
+        const products = await productos.find();
+        res.status(200).json(products);
+    } catch (error) {
+        res.status(500).json({ message: 'Error al obtener productos', error: error.message });
+    }
+};
+
+/**
+ * GET /products/:id
+ * Obtiene un producto por su ID.
+ */
+const getProductById = async (req, res) => {
+    try {
+        const product = await productos.findById(req.params.id);
+        if (!product) {
+            return res.status(404).json({ message: 'Producto no encontrado' });
+        }
+        res.status(200).json(product);
+    } catch (error) {
+        res.status(500).json({ message: 'Error al obtener el producto', error: error.message });
+    }
+};
+
+/**
+ * PUT /products/:id
+ * Actualiza un producto existente por su ID.
+ */
 const updateProduct = async (req, res) => {
-    const updatedProduct = await Producto.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json(updatedProduct);
+    try {
+        const { id } = req.params;
+        
+        // Verificar si el código de referencia ya existe en otro producto
+        if (req.body.codeReference) {
+            const existingProduct = await productos.findOne({ 
+                codeReference: req.body.codeReference, 
+                _id: { $ne: id } 
+            });
+            
+            if (existingProduct) {
+                return res.status(400).json({ 
+                    message: 'El código de referencia ya está en uso por otro producto' 
+                });
+            }
+        }
+        
+        // Buscar y actualizar el producto
+        const updatedProduct = await productos.findByIdAndUpdate(
+            id, 
+            req.body, 
+            { new: true, runValidators: true }
+        );
+        
+        if (!updatedProduct) {
+            return res.status(404).json({ message: 'Producto no encontrado' });
+        }
+        
+        res.status(200).json(updatedProduct);
+    } catch (error) {
+        res.status(500).json({ 
+            message: 'Error al actualizar el producto', 
+            error: error.message 
+        });
+    }
 };
 
-const toggleProductState = async (req, res) => {
-    const product = await Producto.findById(req.params.id);
-    product.status = !product.status;
-    await product.save();
-    res.json(product);
+export { 
+    createProduct, 
+    getAllProducts, 
+    getProductById, 
+    updateProduct 
 };
-
-export {
-    getProducts,
-    getProductById,
-    createProduct,
-    updateProduct,
-    toggleProductState
-}
