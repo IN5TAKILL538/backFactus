@@ -20,14 +20,17 @@ app.use(express.static("public"));
 app.use(cors());
 
 
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
     .then(() => console.log('Base de datos conectada'))
     .catch((error) => console.log('Error en la conexión a la base de datos:', error));
 
 
-    app.use("/api/facturar", facturar)
-    app.use("/api/usuariosr", usuariosr)
-    app.use("/api/productosr", productosr)
+app.use("/api/facturar", facturar)
+app.use("/api/usuariosr", usuariosr)
+app.use("/api/productosr", productosr)
 
 
 const PORT = process.env.PORT || 3200;
