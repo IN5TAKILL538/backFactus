@@ -2,9 +2,9 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
-import facturar from "./routes/facturar.js";
-import productosr from "./routes/productosr.js";
-import usuariosr from "./routes/usuariosr.js";
+import facturas from "./routes/facturar.js";
+import clientes from "./routes/productosr.js";
+import servicios from "./routes/usuariosr.js";
 
 
 dotenv.config();
@@ -28,9 +28,9 @@ mongoose.connect(process.env.MONGODB_URI, {
     .catch((error) => console.log('Error en la conexión a la base de datos:', error));
 
 
-app.use("/api/facturar", facturar)
-app.use("/api/usuariosr", usuariosr)
-app.use("/api/productosr", productosr)
+app.use("/api/facturas", facturas)
+app.use("/api/clientes", clientes)
+app.use("/api/servicios", servicios)
 
 
 const PORT = process.env.PORT || 3200;
