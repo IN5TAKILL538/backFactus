@@ -8,6 +8,9 @@ const FACTUS_API_URL = "https://api-sandbox.factus.com.co/v1/bills";
 /**
  * Middleware para validar y transformar datos según el formato requerido
  */
+
+
+
 const transformInvoiceData = async (req, res, next) => {
     try {
         // Si la petición viene en formato API (datos completos)
