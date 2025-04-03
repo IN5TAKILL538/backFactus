@@ -4,7 +4,7 @@ import express from "express";
 
 
 
-import { createUser, getAllUsers, getUserById } from '../controllers/usuariosc.js';
+import { createUser, getAllUsers, getUserById, deleteUser } from '../controllers/usuariosc.js';
 
 const router = express.Router();
 
@@ -17,4 +17,5 @@ router.get('/', getAllUsers);
 // Ruta para obtener un usuario por su ID
 router.get('/:id', getUserById);
 
+router.delete('/:id', deleteUser);
 export default router;

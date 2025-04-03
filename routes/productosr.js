@@ -5,7 +5,8 @@ import {
     createProduct, 
     getAllProducts, 
     getProductById, 
-    updateProduct 
+    updateProduct, 
+    deleteProduct 
 } from '../controllers/productosc.js';
 
 const router = express.Router();
@@ -22,4 +23,5 @@ router.get('/:id', getProductById);
 // Ruta para actualizar un producto
 router.put('/:id', updateProduct);
 
+router.delete('/:id', deleteProduct);
 export default router;
